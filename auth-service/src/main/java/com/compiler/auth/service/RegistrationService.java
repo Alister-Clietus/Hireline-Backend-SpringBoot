@@ -18,6 +18,7 @@ public interface RegistrationService
 	public ServiceResponse addUserDetails(RegistrationDTO regdto);
 	public ServiceResponse addStudentDetails(RegistrationDTO regdto);
 	public ServiceResponse addStudentPortalDetails(StudentPortalDTO studentportaldto);
+	public ServiceResponse addPlacementOfficerDetails(RegistrationDTO regdto);
 	public ServiceResponse approveDetails(StatusDTO stdto);
 	public JSONObject searchfor();
 	public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException;

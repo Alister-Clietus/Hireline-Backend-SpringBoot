@@ -80,6 +80,12 @@ public class RegistrationController
 		return new ResponseEntity(regservice.addStudentPortalDetails(studentportaldto),HttpStatus.OK);
 	}
 	
+	@PostMapping("/placement-officer")
+	ResponseEntity<?> addPlacementOfficerDetails(@Valid @RequestBody RegistrationDTO regdto)
+	{
+		return new ResponseEntity(regservice.addPlacementOfficerDetails(regdto),HttpStatus.OK);
+	}
+	
 	@PostMapping("/approve")
 	ResponseEntity<?> approveDetails(@RequestBody StatusDTO stdto)
 	{

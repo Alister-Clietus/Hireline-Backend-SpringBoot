@@ -1,9 +1,5 @@
 package com.placement.admin.dto;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Lob;
-
 public class EmailDTO 
 {
     private int id;

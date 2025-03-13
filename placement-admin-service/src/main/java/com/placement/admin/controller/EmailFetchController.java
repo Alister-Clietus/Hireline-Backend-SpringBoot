@@ -23,7 +23,7 @@ public class EmailFetchController
     @GetMapping("/fetch-emails")
 	ResponseEntity<?> fetchJobEmails()
 	{
-		return new ResponseEntity(emailfetchservice.fetchJobEmails(),HttpStatus.OK);
+		return new ResponseEntity<>(emailfetchservice.fetchJobEmails(),HttpStatus.OK);
 	}
 	
 	

@@ -1,9 +1,5 @@
 package com.placement.admin.serviceImp;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -11,9 +7,6 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.api.services.gmail.Gmail;
-import com.google.api.services.gmail.model.Message;
-import com.google.api.services.gmail.model.MessagePartHeader;
 import com.placement.admin.dto.ResponseDTO;
 import com.placement.admin.entity.EmailEntity;
 import com.placement.admin.repository.EmailFetchRepo;
@@ -23,8 +16,6 @@ import com.placement.admin.service.EmailFetchService;
 public class EmailFetchServiceImp implements EmailFetchService
 {
 
-	
-	
 	@Autowired
 	EmailFetchRepo emailfetchrepo;
 	
