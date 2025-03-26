@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.placement.admin.dto.CompanyDTO;
 import com.placement.admin.dto.JobDTO;
+import com.placement.admin.dto.JobVerifyDTO;
 import com.placement.admin.service.ComapnyService;
 import com.placement.admin.service.JobService;
 
@@ -33,8 +34,9 @@ public class PlacementController
 	}
 	
 	@PostMapping("/verify-job")
-	ResponseEntity<?> verifyJobDetails(@Valid @RequestBody JobDTO jobdto)
+	ResponseEntity<?> verifyJobDetails(@Valid @RequestBody JobVerifyDTO jobdto)
 	{
+		System.out.println("In Controller");
 		return new ResponseEntity<>(jobservice.verifyJobDetails(jobdto),HttpStatus.OK);
 	}
 	
@@ -56,6 +58,19 @@ public class PlacementController
 		return new ResponseEntity<>(jobservice.getAllJobs(),HttpStatus.OK);
 
 	}
+	@GetMapping("/get-job-statitics")
+	ResponseEntity<?> getJobStatistics()
+	{
+		return new ResponseEntity<>(jobservice.getJobStatistics(),HttpStatus.OK);
+
+	}
+	
+	@GetMapping("/get-verified-jobs")
+	ResponseEntity<?> getVerifiedJob()
+	{
+		return new ResponseEntity<>(jobservice.getVerifiedJob(),HttpStatus.OK);
+
+	}
 	
 	
 	@PostMapping("/add-company")
@@ -68,6 +83,12 @@ public class PlacementController
 	ResponseEntity<?> verifyCompanyDetails(@Valid @RequestBody CompanyDTO jobdto)
 	{
 		return new ResponseEntity<>(comapnyservice.verifyCompanyDetails(jobdto),HttpStatus.OK);
+	}
+	
+	@PostMapping("/pending-company")
+	ResponseEntity<?> pendingCompanyDetails(@Valid @RequestBody CompanyDTO jobdto)
+	{
+		return new ResponseEntity<>(comapnyservice.pendingCompanyDetails(jobdto),HttpStatus.OK);
 	}
 	
 	@PostMapping("/delete-company")
@@ -86,6 +107,13 @@ public class PlacementController
 	ResponseEntity<?> getAllCompany()
 	{
 		return new ResponseEntity<>(comapnyservice.getAllCompany(),HttpStatus.OK);
+
+	}
+	
+	@GetMapping("/get-company-statistics")
+	ResponseEntity<?> getCompanyStatistics()
+	{
+		return new ResponseEntity<>(comapnyservice.getCompanyStatistics(),HttpStatus.OK);
 
 	}
 

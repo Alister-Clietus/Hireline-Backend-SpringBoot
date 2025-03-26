@@ -36,7 +36,6 @@ public class CompanyDTO
     private String typeOfRecruitment;
 
     @NotBlank(message = "Work culture description is required")
-    @Size(min = 10, max = 300, message = "Work culture description must be between 10 and 300 characters")
     private String workCulture;
     
 	public String getCompanyName() {

@@ -13,6 +13,9 @@ public class JobEntityPosting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "email_id", nullable = true)
+    private String emailId;
 
     @Column(name = "job_title", nullable = false)
     @NotBlank(message = "Job title is required")
@@ -46,6 +49,17 @@ public class JobEntityPosting {
     private String status;
     
     
+    
+    
+
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
 
 	public String getStatus() {
 		return status;

@@ -104,6 +104,31 @@ public class CompanyServiceImp implements ComapnyService
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Error verifying company details", null);
 	    }
 	}
+	
+	
+	public ServiceResponse pendingCompanyDetails(CompanyDTO companyDTO) 
+	{
+	    try {
+	        // Check if the company exists
+	        Optional<CompanyEntity> companyOptional = companyrepo.findByCompanyName(companyDTO.getCompanyName());
+
+	        if (companyOptional.isPresent()) 
+	        {
+	        	CompanyEntity company = companyOptional.get();
+	            company.setStatus("PENDING"); // Update status to VERIFIED
+	            companyrepo.save(company); // Save changes
+
+	            return new ServiceResponse(Constants.MESSAGE_STATUS.Success, "Company details verified successfully", null);
+	        } 
+	        else 
+	        {
+	            return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Company not found", null);
+	        }
+	    } catch (Exception e) 
+	    {
+	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Error verifying company details", null);
+	    }
+	}
 
 
 	
@@ -171,6 +196,37 @@ public class CompanyServiceImp implements ComapnyService
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Error retrieving company details",null);
 	    }
 	}
+
+
+	public ServiceResponse getCompanyStatistics() 
+	{
+	    JSONObject result = new JSONObject();
+	    Map<String, Object> stats = new HashMap<>();
+
+	    try {
+	        stats.put("totalCompanies", companyrepo.count());
+	        stats.put("totalHybridCompanies", companyrepo.countByTypeOfRecruitment("Hybrid"));
+	        stats.put("totalRemoteCompanies", companyrepo.countByTypeOfRecruitment("Remote"));
+	        stats.put("totalInPersonCompanies", companyrepo.countByTypeOfRecruitment("In-person"));
+	        stats.put("highestLpaOffered", companyrepo.findHighestLpa());
+	        stats.put("mostRecruitedCompany", companyrepo.findMostRecruitedCompany());
+	        stats.put("companiesWithBond", companyrepo.countByBondRequired("Yes"));
+	        stats.put("totalMNC", companyrepo.countByMncOrStartup("MNC"));
+	        stats.put("totalStartup", companyrepo.countByMncOrStartup("Startup"));
+	        stats.put("pendingCompanies", companyrepo.countByStatus("PENDING"));
+	        stats.put("verifiedCompanies", companyrepo.countByStatus("VERIFIED"));
+
+	        result.put("aaData", stats);
+
+	        return new ServiceResponse(Constants.MESSAGE_STATUS.Success, "Company details retrieved successfully", result);
+	    } catch (Exception e) {
+	        e.printStackTrace(); // Logging the exception for debugging
+	        return new ServiceResponse(Constants.MESSAGE_STATUS.Fail, "Error fetching company statistics: " + e.getMessage(), null);
+	    }
+	}
+
+
+	
 
 
 

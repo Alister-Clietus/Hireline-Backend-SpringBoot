@@ -9,7 +9,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +47,8 @@ import com.compiler.student.repository.StudentMcqRepository;
 import com.compiler.student.repository.StudentPrgRepository;
 import com.compiler.student.service.StudentService;
 import com.compiler.student.util.Constants;
-
+import java.util.Comparator;
+import java.util.stream.Collectors;
 @Service
 public class StudentServiceImp implements StudentService{
 	
@@ -996,6 +1000,59 @@ boolean isCompileError = true;
 
 
 	}
+	
+	public JSONObject getStudentsRank() 
+	{
+	    try {
+	        // Fetch all company records
+	        JSONObject result = new JSONObject();
+	        List<RegistrationEntity> companyList = registrationRepo.findAll();
+
+	        if (companyList.isEmpty()) {
+	            return null;
+	        }
+
+	        // Filter only students and sort by marks in descending order
+	        List<RegistrationEntity> studentList = companyList.stream()
+	                .filter(company -> "STUDENT".equals(company.getUserType()))
+	                .sorted(Comparator.comparingInt(entity -> Integer.parseInt(((RegistrationEntity) entity).getTotalMarks())).reversed())
+	                .collect(Collectors.toList());
+
+	        // Convert each student entity to a Map<String, Object> and assign ranks
+	        List<Map<String, Object>> studentDataList = new ArrayList<>();
+	        int rank = 1;
+	        int previousMarks = -1;
+	        int actualRank = 1;
+
+	        for (RegistrationEntity student : studentList) 
+	        {
+	            Map<String, Object> studentMap = new HashMap<>();
+	            studentMap.put("id", student.getId());
+	            studentMap.put("studentName", student.getUserName());
+	            studentMap.put("Marks", student.getTotalMarks());
+	            int marks = Integer.parseInt(student.getTotalMarks());
+
+	            if (marks != previousMarks) {
+	                rank = actualRank;
+	            }
+
+	            studentMap.put("Rank", rank);
+
+	            previousMarks = marks;
+	            actualRank++;
+	            studentDataList.add(studentMap);
+	        }
+
+	        result.put("aaData", studentDataList);
+	        
+	        return result;
+
+	    } catch (Exception e) 
+	    {
+	        return null;
+	    }
+	}
+
 
 	
 

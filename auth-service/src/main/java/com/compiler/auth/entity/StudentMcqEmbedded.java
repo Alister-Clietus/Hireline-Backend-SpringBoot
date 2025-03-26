@@ -4,7 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class StudentMcqEmbedded {
+public class StudentMcqEmbedded 
+{
 	@Column(name="questionId")
 	private String questionId;
 	

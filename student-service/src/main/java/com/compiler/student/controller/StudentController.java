@@ -196,5 +196,10 @@ switch (id.getProgrammingLanguage())
 	public ResponseEntity<?> updateTimer(@RequestBody StudentTimerDTO  timerdto) {
 		return new ResponseEntity<>(studentService.updateUserTimer(timerdto),new HttpHeaders(),HttpStatus.OK);
 	}
+	@GetMapping("/get-rank-list")
+	public ResponseEntity<?> getStudentsRank() {
+		return new ResponseEntity<>(studentService.getStudentsRank(),new HttpHeaders(),HttpStatus.OK);
+	}
+	
 
 }

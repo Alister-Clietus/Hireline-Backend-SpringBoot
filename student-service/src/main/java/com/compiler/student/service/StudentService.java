@@ -31,6 +31,7 @@ public interface StudentService {
 	
 	public ServiceResponse attendedPrgQuestionStatus(String userName);
 	public ServiceResponse updateUserTimer(StudentTimerDTO  timerdto);
+	public JSONObject getStudentsRank();
 
 
 
