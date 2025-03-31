@@ -158,6 +158,13 @@ public class RegistrationController
 			return new ResponseEntity<>(regservice.getUserByName(userName),new HttpHeaders(),HttpStatus.ACCEPTED);
 	}
 	
+	//get single user
+	@GetMapping("/getstudentportalbyemail/{email}")
+	public ResponseEntity<Object> getStudentDetailsByEmail(@PathVariable("email") String email)throws RecordNotFoundException
+	{
+			return new ResponseEntity<>(regservice.getStudentDetailsByEmail(email),new HttpHeaders(),HttpStatus.ACCEPTED);
+	}
+	
 	//verify Guest
 	@PostMapping("/verifyUser")
 	public ResponseEntity<Object>verify(@RequestBody RegistrationDTO dto) throws RecordNotFoundException {

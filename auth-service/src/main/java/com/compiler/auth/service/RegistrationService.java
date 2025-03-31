@@ -41,7 +41,7 @@ public interface RegistrationService
 	public JSONObject getTableSettings();
 	public ServiceResponse deletetablesettings(AdminDTO admindto);
 
-
+	public JSONObject getStudentDetailsByEmail(String email);
 
 
 

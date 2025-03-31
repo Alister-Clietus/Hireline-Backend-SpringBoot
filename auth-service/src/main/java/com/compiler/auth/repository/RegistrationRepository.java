@@ -26,4 +26,6 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
 	
 	Optional<RegistrationEntity> findByPhoneNumber(String phoneNumber);
 	Optional<RegistrationEntity> findByEmail(String email);
+	List<RegistrationEntity> findByUserTypeAndStatus(String userType, String status);
+	long countByUserTypeAndStatus(String userType, String status);
 }

@@ -23,4 +23,6 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, String
 
     Page<QuestionEntity> findAll(Specification<QuestionEntity> spec, Pageable pageable);
 	List<QuestionEntity> findAll(Specification<QuestionEntity> spec);
+	
+	long countByQuestiontypeAndStatus(String questionType, String status);
 }

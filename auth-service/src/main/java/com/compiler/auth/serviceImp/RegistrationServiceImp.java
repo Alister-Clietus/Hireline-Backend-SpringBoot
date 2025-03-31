@@ -229,6 +229,9 @@ public class RegistrationServiceImp implements RegistrationService
 				
 				
 				regrepo.save(entity);
+				System.out.println("Saved Successfully in registration portal");
+				studentportalrepo.save(entity1);
+				System.out.println("Saved Successfully in student portal	 portal");
 				return new ServiceResponse(Constants.MESSAGE_STATUS.success,Constants.USERLOG.USER_ADDED,null);
 		  }
 		}
@@ -390,75 +393,96 @@ public class RegistrationServiceImp implements RegistrationService
 
 	}
 	
-	public JSONObject dashBoard() {
-		JSONObject result = new JSONObject();
-		try {
+	public JSONObject dashBoard() 
+	{
+	    JSONObject result = new JSONObject();
+	    try {
+	        // Existing logic for questionnaires
+	        List<RegistrationEntity> questionsList = regrepo.findByUserType("QUESTIONNAIRE");
+	        JSONArray array = new JSONArray();
+	        for (RegistrationEntity users : questionsList) {
+	            JSONObject obj1 = new JSONObject();
+	            obj1.put("employeeid", users.getEmpid());
+	            obj1.put("noofquestions", users.getNumberOfQuestions());
+	            array.add(obj1);
+	        }
+	        result.put("employee", array);
 
-			List<RegistrationEntity> questionsList = regrepo.findByUserType("QUESTIONNAIRE");
-			JSONArray array = new JSONArray();
-			for (RegistrationEntity users : questionsList) {
-				JSONObject obj1 = new JSONObject();
-				obj1.put("employeeid", users.getEmpid());
-				obj1.put("noofquestions", users.getNumberOfQuestions());
-				array.add(obj1);
-			}
-			result.put("employee", array);
+	        // Existing logic for students
+	        JSONArray array2 = new JSONArray();
+	        List<RegistrationEntity> studentsList = regrepo.findByUserType("STUDENT");
+	        for (RegistrationEntity users : studentsList) {
+	            JSONObject obj2 = new JSONObject();
+	            obj2.put("username", users.getUserName());
+	            obj2.put("totalmarks", users.getTotalMarks());
+	            array2.add(obj2);
+	        }
+	        result.put("student", array2);
 
-			JSONArray array2 = new JSONArray();
-			List<RegistrationEntity> studentsList = regrepo.findByUserType("STUDENT");
-			for (RegistrationEntity users : studentsList) {
-				JSONObject obj2 = new JSONObject();
-				obj2.put("username", users.getUserName());
-				obj2.put("totalmarks", users.getTotalMarks());
-				array2.add(obj2);
-			}
-			result.put("student", array2);
+	        // Existing logic for all users
+	        JSONArray array3 = new JSONArray();
+	        List<RegistrationEntity> studentsList1 = regrepo.findAll();
+	        for (RegistrationEntity users : studentsList1) {
+	            JSONObject obj3 = new JSONObject();
+	            obj3.put("username", users.getUserName());
+	            obj3.put("status", users.getStatus());
+	            array3.add(obj3);
+	        }
+	        result.put("student2", array3);
 
-			JSONArray array3 = new JSONArray();
-			List<RegistrationEntity> studentsList1 = regrepo.findAll();
-			for (RegistrationEntity users : studentsList1) {
-				JSONObject obj3 = new JSONObject();
-				obj3.put("username", users.getUserName());
-				obj3.put("status", users.getStatus());
-				array3.add(obj3);
-			}
-			result.put("student2", array3);
+	        // Existing logic for tab-switched users
+	        JSONArray array4 = new JSONArray();
+	        List<SelectedQuestionEntity> studentsList4 = selectedquestionrepo.findAll();
+	        for (SelectedQuestionEntity users : studentsList4) {
+	            JSONObject obj4 = new JSONObject();
+	            obj4.put("username", users.getUserName());
+	            obj4.put("tabchanged", users.getTabChanged());
+	            obj4.put("timer", users.getTimer());
+	            array4.add(obj4);
+	        }
+	        result.put("TabSwitched", array4);
 
-			JSONArray array4 = new JSONArray();
-			List<SelectedQuestionEntity> studentsList4 = selectedquestionrepo.findAll();
-			for (SelectedQuestionEntity users : studentsList4) 
-			{
-				JSONObject obj4 = new JSONObject();
-				obj4.put("username", users.getUserName());
-				obj4.put("tabchanged", users.getTabChanged());
-				obj4.put("timer", users.getTimer());
-				array4.add(obj4);
-			}
-			result.put("TabSwitched", array4);
-			
-			JSONArray array5 = new JSONArray();
-			List<RegistrationEntity> studentsList5 = regrepo.findAll();
-			for (RegistrationEntity users : studentsList5) {
-				JSONObject obj5 = new JSONObject();
-				obj5.put("username", users.getUserName());
-				obj5.put("role", users.getUserType());
-				array5.add(obj5);
-			}
-			result.put("student3", array5);
+	        // Existing logic for all users with roles
+	        JSONArray array5 = new JSONArray();
+	        List<RegistrationEntity> studentsList5 = regrepo.findAll();
+	        for (RegistrationEntity users : studentsList5) {
+	            JSONObject obj5 = new JSONObject();
+	            obj5.put("username", users.getUserName());
+	            obj5.put("role", users.getUserType());
+	            array5.add(obj5);
+	        }
+	        result.put("student3", array5);
 
-			result.put("noofstudents", regrepo.countByUserType("STUDENT"));
-			result.put("noofadmin", regrepo.countByUserType("ADMIN"));
-			result.put("noofquestionair", regrepo.countByUserType("QUESTIONAIR"));
-			result.put("allquestions", questionrepo.countAllQuestions());
-			result.put("mcqquestions", questionrepo.countByQuestiontype("MCQ"));
-			result.put("programquestions", questionrepo.countByQuestiontype("PRG"));
+	        // Add counts for verified users
+	        long verifiedQuestionnairesCount = regrepo.countByUserTypeAndStatus("QUESTIONNAIRE", "VERIFIED");
+	        long verifiedStudentsCount = regrepo.countByUserTypeAndStatus("STUDENT", "VERIFIED");
+	        long verifiedAdminsCount = regrepo.countByUserTypeAndStatus("ADMIN", "VERIFIED");
+	        
+	        // Add counts for verified questions
+	        long verifiedMcqQuestionsCount = questionrepo.countByQuestiontypeAndStatus("MCQ", "VERIFIED");
+	        long verifiedProgrammingQuestionsCount = questionrepo.countByQuestiontypeAndStatus("PRG", "VERIFIED");
 
-		} catch (Exception e) {
-			result.put("student3", null);
-			logger.error("Error:" + e.getMessage(), e);
-			return result;
-		}
-		return result;
+	        result.put("verifiedMcqQuestionsCount", verifiedMcqQuestionsCount);
+	        result.put("verifiedProgrammingQuestionsCount", verifiedProgrammingQuestionsCount);
+
+	        result.put("verifiedQuestionnairesCount", verifiedQuestionnairesCount);
+	        result.put("verifiedStudentsCount", verifiedStudentsCount);
+	        result.put("verifiedAdminsCount", verifiedAdminsCount);
+
+	        // Existing statistics
+	        result.put("noofstudents", regrepo.countByUserType("STUDENT"));
+	        result.put("noofadmin", regrepo.countByUserType("ADMIN"));
+	        result.put("noofquestionair", regrepo.countByUserType("QUESTIONNAIRE"));
+	        result.put("allquestions", questionrepo.countAllQuestions());
+	        result.put("mcqquestions", questionrepo.countByQuestiontype("MCQ"));
+	        result.put("programquestions", questionrepo.countByQuestiontype("PRG"));
+
+	    } catch (Exception e) {
+	        result.put("student3", null);
+	        logger.error("Error:" + e.getMessage(), e);
+	        return result;
+	    }
+	    return result;
 	}
 	
 	public String isMcqAttended(String username)
@@ -1270,6 +1294,74 @@ public JSONObject getQuestionIdAndMark(String userName) {
 	        logger.error("Error : " + e.getMessage(), e);
 	        return new ServiceResponse("fail", "User Inserted UnSuccessfully", null);
 	    }
+	}
+	
+	public JSONObject getStudentDetailsByEmail(String email) {
+	    JSONObject result = new JSONObject();
+	    try {
+	        // Fetch the student details by email
+	        Optional<StudentPortalEntity> studentOptional = studentportalrepo.findByEmail(email);
+
+	        if (studentOptional.isPresent()) {
+	            StudentPortalEntity student = studentOptional.get();
+
+	            // Populate the JSON object with student details
+	            result.put("id", student.getId());
+	            result.put("firstName", student.getFirstName());
+	            result.put("lastName", student.getLastName());
+	            result.put("phoneNumber", student.getPhoneNumber());
+	            result.put("gender", student.getGender());
+	            result.put("houseName", student.getHousename());
+	            result.put("pincode", student.getPincode());
+	            result.put("currentSemester", student.getCurrentSemester());
+	            result.put("currentCgpa", student.getCurrentCgpa());
+	            result.put("ktuId", student.getKtuId());
+	            result.put("email", student.getEmail());
+	            result.put("highSchoolCourse", student.getHighSchoolCourse());
+	            result.put("highSchoolCollege", student.getHighSchoolCollege());
+	            result.put("highSchoolGraduationYear", student.getHighSchoolGraduationYear());
+	            result.put("higherSecondaryCourse", student.getHigherSecondaryCourse());
+	            result.put("higherSecondaryCollege", student.getHigherSecondaryCollege());
+	            result.put("higherSecondaryGraduationYear", student.getHigherSecondaryGraduationYear());
+	            result.put("graduationDegree", student.getGraduationDegree());
+	            result.put("graduationCollege", student.getGraduationCollege());
+	            result.put("graduationGraduationYear", student.getGraduationGraduationYear());
+	            result.put("miniProjectName", student.getMiniProjectName());
+	            result.put("miniProjectStack", student.getMiniProjectStack());
+	            result.put("miniProjectYear", student.getMiniProjectYear());
+	            result.put("mainProjectName", student.getMainProjectName());
+	            result.put("mainProjectStack", student.getMainProjectStack());
+	            result.put("mainProjectYear", student.getMainProjectYear());
+	            result.put("personalProjectName", student.getPersonalProjectName());
+	            result.put("personalProjectStack", student.getPersonalProjectStack());
+	            result.put("personalProjectYear", student.getPersonalProjectYear());
+	            result.put("frameworksKnown1", student.getFrameworksKnown1());
+	            result.put("frameworksKnown2", student.getFrameworksKnown2());
+	            result.put("frameworksKnown3", student.getFrameworksKnown3());
+	            result.put("programmingLanguages1", student.getProgrammingLanguages1());
+	            result.put("programmingLanguages2", student.getProgrammingLanguages2());
+	            result.put("programmingLanguages3", student.getProgrammingLanguages3());
+	            result.put("languagesKnown1", student.getLanguagesKnown1());
+	            result.put("languagesKnown2", student.getLanguagesKnown2());
+	            result.put("languagesKnown3", student.getLanguagesKnown3());
+	            result.put("hobbies1", student.getHobbies1());
+	            result.put("hobbies2", student.getHobbies2());
+	            result.put("hobbies3", student.getHobbies3());
+	            result.put("achievements1", student.getAchievements1());
+	            result.put("achievements2", student.getAchievements2());
+	            result.put("achievements3", student.getAchievements3());
+	            result.put("softSkills1", student.getSoftSkills1());
+	            result.put("softSkills2", student.getSoftSkills2());
+	            result.put("softSkills3", student.getSoftSkills3());
+	        } else 
+	        {
+	            result.put("message", "Student not found with the provided email ID.");
+	        }
+	    } catch (Exception e) {
+	        logger.error("Error fetching student details by email: " + e.getMessage(), e);
+	        result.put("error", "An error occurred while fetching student details.");
+	    }
+	    return result;
 	}
 	
 }
