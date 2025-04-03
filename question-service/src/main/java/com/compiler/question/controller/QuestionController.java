@@ -60,6 +60,7 @@ public class QuestionController
 	@PostMapping("/add/prg")
 	ResponseEntity<?> addPRGQuestionDetails(@Valid @RequestBody PrgQuestionDTO prgquesdto)
 	{
+		System.out.println("Reached Programming question adding area");
 		return new ResponseEntity(queservice.addPRGQuestionDetails(prgquesdto),HttpStatus.OK);
 	}
 	

@@ -194,7 +194,9 @@ public class QuestionServiceImp implements QuestionService
 		} // TRY CARCH ENDS HERE
 	}
 	
-	public ServiceResponse addPRGQuestionDetails(PrgQuestionDTO prgquesdto) {
+	public ServiceResponse addPRGQuestionDetails(PrgQuestionDTO prgquesdto) 
+	{
+		System.out.println("Reached Implementation area");
 		Optional<QuestionEntity> optionalEntity = qesrepo.findById(prgquesdto.getQuestionId());
 		try {
 			if (optionalEntity.isPresent()) {
@@ -225,15 +227,18 @@ public class QuestionServiceImp implements QuestionService
 				entity.setTestcase10(prgquesdto.getTestcase10());
 				entity.setTestcase10A(prgquesdto.getTestcase10A());
 				prgrepo.save(entity);
+				System.out.println("Saved Successfully Implementation area");
 				return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.QUESTION.QUESTION_ADDED_TESTCASES, null);
 
 			} else {
+				System.out.println("uesyion entity no present");
 
 				return new ServiceResponse(Constants.MESSAGE_STATUS.fail, Constants.QUESTION.QUESTION_ADDED, null);
 
 			}
 		} catch (Exception e) {
 			logger.error("Error:" + e.getMessage(), e);
+			System.out.println("Exception Occured");
 			return new ServiceResponse(Constants.MESSAGE_STATUS.fail, Constants.QUESTION.QUESTION_ADDED, null);
 
 		} // TRY CARCH ENDS HERE
