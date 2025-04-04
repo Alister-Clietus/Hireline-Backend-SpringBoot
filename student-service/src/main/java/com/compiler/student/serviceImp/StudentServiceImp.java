@@ -82,9 +82,12 @@ public class StudentServiceImp implements StudentService{
 	//SAVE THE USER CODE STUDENT PROGRAM CODE*************************************************************
 	public ServiceResponse addPRGSolution(StudentPrgDto studentPrgDto)
 	{
+		System.out.println(studentPrgDto.getQuestionid());
+		System.out.println(studentPrgDto.getUsername());
 		Optional<QuestionEntity> num=questionRepository.findById(studentPrgDto.getQuestionid());
 		try
 		{
+			
 //			 && questionRepository.existsByUsername(studentPrgDto.getUsername())
 			if(num.isPresent())
 			{   
